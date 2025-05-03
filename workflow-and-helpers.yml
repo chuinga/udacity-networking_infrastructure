@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A sample of a CloudFormation template
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: dev
+    Description: The environment name
+    AllowedValues: 
+      - dev
+      - test
+      - staging
+      - prod
+
+  VpcCidr:
+    Type: String
+    Default: 10.0.0.0/24
+    Description: CIDR block for the VPC
+    
+  ProjectName:
+    Type: String
+    Description: Name of the project
+    Default: my-project    # Added default value
+    MinLength: 1
+    MaxLength: 64
+    AllowedPattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+    ConstraintDescription: Project name must start with a letter and can contain letters, numbers, and hyphens
+    
+  InstanceType:
+    Type: String
+    Default: t3.micro
+    Description: EC2 instance type
+    AllowedValues:
+      - t3.micro
+      - t3.small
+      - t3.medium
+      
+  TagEnvironment:
+    Type: String
+    Default: Development
+    Description: Environment tag value
+    AllowedValues:
+      - Development
+      - Staging
+      - Production
+
+Resources:
+  MyVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Environment
+          Value: !Ref TagEnvironment
+        - Key: Project
+          Value: !Ref ProjectName
